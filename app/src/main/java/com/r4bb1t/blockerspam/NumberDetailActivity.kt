@@ -4,7 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.r4bb1t.blockerspam.data.CallDatabase
 import com.r4bb1t.blockerspam.data.WhitelistEntry
@@ -25,8 +28,16 @@ class NumberDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityNumberDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Adiciona a margem da status bar/câmera
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
 
         val number = intent.getStringExtra("number") ?: run { finish(); return }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
