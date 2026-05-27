@@ -55,18 +55,26 @@ object NumberInfoHelper {
         val clean = rawNumber.replace(Regex("[^+\\d]"), "")
 
         val isIntl = clean.startsWith("+") && !clean.startsWith("+55")
-        val isBrazil = clean.startsWith("+55") || (!clean.startsWith("+") && clean.length in 8..11)
+        val isBrazil = clean.startsWith("+55") || (!clean.startsWith("+") && clean.length in 8..15)
 
         var ddd: String? = null
         var region: String? = null
         var lineType = "Desconhecido"
 
         if (isBrazil) {
-            val local = when {
+            var local = when {
                 clean.startsWith("+55") -> clean.removePrefix("+55")
                 clean.startsWith("55") && clean.length > 11 -> clean.removePrefix("55")
                 else -> clean
             }
+            
+            if (local.startsWith("0")) {
+                local = local.removePrefix("0")
+                if (local.length >= 12) {
+                    local = local.drop(2) // Remove o código da operadora (ex: 15)
+                }
+            }
+
             if (local.length >= 2) {
                 ddd = local.take(2)
                 region = dddMap[ddd] ?: "Brasil"

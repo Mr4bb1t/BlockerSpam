@@ -20,6 +20,7 @@ import com.r4bb1t.blockerspam.adapter.BlockedCallsAdapter
 import com.r4bb1t.blockerspam.data.CallDatabase
 import com.r4bb1t.blockerspam.databinding.ActivityMainBinding
 import com.r4bb1t.blockerspam.service.BlockerCallScreeningService
+import com.r4bb1t.blockerspam.updater.GithubUpdater
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: BlockedCallsAdapter
     private val db by lazy { CallDatabase.getInstance(this) }
     private val prefs by lazy { getSharedPreferences("blocker_prefs", Context.MODE_PRIVATE) }
+    private val updater by lazy { GithubUpdater(this) }
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -64,6 +66,24 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         checkSetupComplete()
+        checkForUpdates()
+    }
+
+    private fun checkForUpdates() {
+        lifecycleScope.launch {
+            val updateInfo = updater.checkForUpdate()
+            if (updateInfo != null) {
+                binding.bannerUpdate.visibility = View.VISIBLE
+                binding.tvUpdateMsg.text = "Nova versão ${updateInfo.version} disponível!"
+                binding.btnUpdateAction.setOnClickListener {
+                    binding.btnUpdateAction.isEnabled = false
+                    binding.btnUpdateAction.text = "Baixando..."
+                    updater.downloadAndInstall(updateInfo)
+                }
+            } else {
+                binding.bannerUpdate.visibility = View.GONE
+            }
+        }
     }
 
     private fun setupRecyclerView() {
