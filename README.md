@@ -21,6 +21,7 @@
 - **📇 Intelligent Whitelisting**: Only allows calls from your saved contacts, automatically blocking everything else.
 - **📊 Comprehensive Call Log**: Maintains a detailed history of all blocked calls, including timestamp, region, carrier, and type, stored locally via Room Database.
 - **🎨 Premium UI/UX**: Full-screen edge-to-edge support with a custom steampunk-themed interface and fluid animations.
+- **🔄 In-App Auto-Updates**: Seamlessly checks for new releases on GitHub and prompts for an update directly inside the app.
 - **🔒 Privacy First**: All data is stored locally on the device. No external tracking or data collection.
 
 ## 🛠️ Tech Stack
@@ -38,8 +39,8 @@
 
 You can download the compiled APK directly from the repository and install it on your device:
 
-<a href="https://github.com/Mr4bb1t/BlockerSpam/raw/main/SpamGuard1.0.apk">
-  <img src="https://img.shields.io/badge/Download-SpamGuard1.0.apk-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
+<a href="https://github.com/Mr4bb1t/BlockerSpam/raw/main/BlockerSpam1.1.apk">
+  <img src="https://img.shields.io/badge/Download-BlockerSpam1.1.apk-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
 </a>
 
 > **Note**: You might need to allow "Install from Unknown Sources" in your Android settings to install the APK.
