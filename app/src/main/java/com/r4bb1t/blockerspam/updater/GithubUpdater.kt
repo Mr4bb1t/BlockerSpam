@@ -80,6 +80,13 @@ class GithubUpdater(private val context: Context) {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(updateInfo.downloadUrl)
 
+        val destinationFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        val fileName = "BlockerSpam_update.apk"
+        val oldFile = File(destinationFolder, fileName)
+        if (oldFile.exists()) {
+            oldFile.delete()
+        }
+
         val request = DownloadManager.Request(uri)
             .setTitle("BlockerSpam Atualização")
             .setDescription("Baixando a versão ${updateInfo.version}")
