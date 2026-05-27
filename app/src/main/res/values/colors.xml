@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background layers -->
+    <color name="background">#0D0D0D</color>
+    <color name="surface">#1A1A1A</color>
+    <color name="surface_elevated">#242424</color>
+    <color name="divider">#2A2A2A</color>
+
+    <!-- Accent -->
+    <color name="accent_red">#E53935</color>
+    <color name="accent_red_muted">#2A1010</color>
+
+    <!-- Text -->
+    <color name="text_primary">#F5F5F5</color>
+    <color name="text_secondary">#888888</color>
+
+    <!-- Alerts -->
+    <color name="warning_bg">#1A1200</color>
+    <color name="warning_text">#FFCA28</color>
+
+    <!-- Legacy -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

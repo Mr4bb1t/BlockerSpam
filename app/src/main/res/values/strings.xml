@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BlockerSpam</string>
+    <string name="blocking_active">Proteção ativa</string>
+    <string name="blocking_inactive">Proteção desativada</string>
+    <string name="no_calls">Nenhuma ligação bloqueada ainda.</string>
+    <string name="setup_permissions">Permissões necessárias não concedidas</string>
+    <string name="setup_role">Defina BlockerSpam como app de triagem</string>
+    <string name="btn_configure">Configurar</string>
+    <string name="btn_whitelist">Adicionar à whitelist</string>
+    <string name="btn_add_contact">Adicionar aos Contatos</string>
+    <string name="btn_delete">Apagar do histórico</string>
+    <string name="notif_title">Ligação bloqueada</string>
+</resources>
