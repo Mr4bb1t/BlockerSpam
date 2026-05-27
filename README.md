@@ -34,7 +34,21 @@
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 📥 Download the App
+
+You can download the compiled APK directly from the repository and install it on your device:
+
+<a href="https://github.com/Mr4bb1t/BlockerSpam/raw/main/SpamGuard1.0.apk">
+  <img src="https://img.shields.io/badge/Download-SpamGuard1.0.apk-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
+</a>
+
+> **Note**: You might need to allow "Install from Unknown Sources" in your Android settings to install the APK.
+
+---
+
+### 💻 Build from Source
+
+#### Prerequisites
 - Android Studio Iguana / Jellyfish or newer
 - Android SDK 34
 - A physical Android device (Call blocking features are difficult to test on an emulator)
