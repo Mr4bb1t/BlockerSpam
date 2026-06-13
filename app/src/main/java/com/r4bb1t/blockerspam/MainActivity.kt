@@ -21,6 +21,9 @@ import com.r4bb1t.blockerspam.data.CallDatabase
 import com.r4bb1t.blockerspam.databinding.ActivityMainBinding
 import com.r4bb1t.blockerspam.service.BlockerCallScreeningService
 import com.r4bb1t.blockerspam.updater.GithubUpdater
+import com.google.android.material.tabs.TabLayout
+import android.provider.Settings
+import androidx.core.app.NotificationManagerCompat
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -59,6 +62,8 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupToggle()
+        setupMessageToggle()
+        setupTabs()
         observeData()
         requestPermissions()
     }
@@ -115,6 +120,56 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private fun setupMessageToggle() {
+        val enabled = prefs.getBoolean("pref_message_blocking_enabled", true)
+        binding.switchMessageBlocking.isChecked = enabled
+        updateMessageToggleUI(enabled)
+
+        binding.switchMessageBlocking.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("pref_message_blocking_enabled", isChecked).apply()
+            updateMessageToggleUI(isChecked)
+            if (isChecked) {
+                checkNotificationPermission()
+            }
+        }
+
+        binding.btnMessageSettings.setOnClickListener {
+            startActivity(Intent(this, MessageSettingsActivity::class.java))
+        }
+    }
+
+    private fun updateMessageToggleUI(enabled: Boolean) {
+        binding.tvMessageBlockingStatus.text = if (enabled) "Filtro ativo" else "Filtro desativado"
+        binding.cardMessageStatus.setCardBackgroundColor(
+            if (enabled) getColor(R.color.accent_red) else getColor(R.color.surface)
+        )
+    }
+
+    private fun setupTabs() {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab?.position == 0) {
+                    binding.contentCalls.visibility = View.VISIBLE
+                    binding.contentMessages.visibility = View.GONE
+                } else {
+                    binding.contentCalls.visibility = View.GONE
+                    binding.contentMessages.visibility = View.VISIBLE
+                    checkNotificationPermission()
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+    }
+
+    private fun checkNotificationPermission() {
+        val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(this)
+        if (!enabledListeners.contains(packageName)) {
+            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+            startActivity(intent)
+        }
+    }
+
     private fun observeData() {
         // Blocked calls list
         lifecycleScope.launch {
@@ -125,13 +180,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Today's count
+        // Today's count calls
         val startOfDay = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0)
         }.timeInMillis
         lifecycleScope.launch {
             db.callDao().getCountSince(startOfDay).collectLatest { count ->
                 binding.tvTodayCount.text = "$count hoje"
+            }
+        }
+
+        // Messages data
+        lifecycleScope.launch {
+            db.callDao().getBlockedMessageSummaries().collectLatest { list ->
+                val totalMessages = list.sumOf { it.messageCount }
+                binding.tvMessageTotalBlocked.text = "$totalMessages total"
+            }
+        }
+        
+        lifecycleScope.launch {
+            db.callDao().getMessageCountSince(startOfDay).collectLatest { count ->
+                binding.tvMessageTodayCount.text = "$count hoje"
             }
         }
     }
@@ -174,14 +243,26 @@ class MainActivity : AppCompatActivity() {
         val hasRole = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getSystemService(RoleManager::class.java).isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
         } else false
+        
+        val hasNotificationAccess = NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
 
-        binding.bannerSetup.visibility = if (!hasPermissions || !hasRole) View.VISIBLE else View.GONE
+        binding.bannerSetup.visibility = if (!hasPermissions || !hasRole || !hasNotificationAccess) View.VISIBLE else View.GONE
+        
         binding.tvSetupMsg.text = when {
             !hasPermissions -> "⚠ Permissões necessárias não concedidas"
             !hasRole -> "⚠ Defina BlockerSpam como app de triagem de chamadas"
+            !hasNotificationAccess -> "⚠ Acesso a notificações necessário (Mensagens)"
             else -> ""
         }
-        binding.btnSetupAction.visibility = if (!hasRole && hasPermissions) View.VISIBLE else View.GONE
-        binding.btnSetupAction.setOnClickListener { requestScreeningRole() }
+        
+        binding.btnSetupAction.visibility = if ((!hasRole && hasPermissions) || (!hasNotificationAccess && hasPermissions && hasRole)) View.VISIBLE else View.GONE
+        
+        binding.btnSetupAction.setOnClickListener { 
+            if (!hasRole) {
+                requestScreeningRole()
+            } else if (!hasNotificationAccess) {
+                startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+            }
+        }
     }
 }
