@@ -18,11 +18,17 @@
 ## ✨ Key Features
 
 - **🛡️ Silent Interception**: Utilizes `CallScreeningService` to instantly reject unknown numbers without the phone ever ringing.
+- **🔒 Private/Unknown Calls**: Calls with hidden caller ID or no number are now blocked too (v1.6+).
 - **📇 Intelligent Whitelisting**: Only allows calls from your saved contacts, automatically blocking everything else.
 - **📊 Comprehensive Call Log**: Maintains a detailed history of all blocked calls, including timestamp, region, carrier, and type, stored locally via Room Database.
 - **🎨 Premium UI/UX**: Full-screen edge-to-edge support with a custom steampunk-themed interface and fluid animations.
 - **🔄 In-App Auto-Updates**: Seamlessly checks for new releases on GitHub and prompts for an update directly inside the app.
 - **🔒 Privacy First**: All data is stored locally on the device. No external tracking or data collection.
+
+### 📌 Changelog
+
+- **v1.6** — Corrige o bloqueio de chamadas com número desconhecido/privado, responde a chamada imediatamente (mesmo se o banco falhar) e adiciona notificação de atualização. `versionCode` 7 / `versionName` 1.6.
+- **v1.5** — Bloqueio de mensagens por palavras-chave.
 
 ## 🛠️ Tech Stack
 
@@ -39,8 +45,8 @@
 
 You can download the compiled APK directly from the repository and install it on your device:
 
-<a href="https://github.com/Mr4bb1t/BlockerSpam/raw/main/BlockerSpam1.4.apk">
-  <img src="https://img.shields.io/badge/Download-BlockerSpam1.4.apk-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
+<a href="https://github.com/Mr4bb1t/BlockerSpam/releases/latest/download/BlockerSpam1.6.apk">
+  <img src="https://img.shields.io/badge/Download-BlockerSpam1.6.apk-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
 </a>
 
 > **Note**: You might need to allow "Install from Unknown Sources" in your Android settings to install the APK.

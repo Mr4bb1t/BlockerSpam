@@ -8,10 +8,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         setupMessageToggle()
         setupTabs()
         observeData()
+        showUpdateToastIfNeeded()
         requestPermissions()
     }
 
@@ -72,6 +75,33 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         checkSetupComplete()
         checkForUpdates()
+    }
+
+    /**
+     * Aviso interno (não depende da permissão de notificações) mostrado uma
+     * única vez após a instalação de uma versão nova.
+     */
+    private fun showUpdateToastIfNeeded() {
+        val packageInfo = try {
+            packageManager.getPackageInfo(packageName, 0)
+        } catch (e: Exception) {
+            return
+        }
+        val versionCode = PackageInfoCompat.getLongVersionCode(packageInfo)
+        val lastSeen = prefs.getLong("last_seen_version_code", -1L)
+        val isNotFirstInstall = packageInfo.lastUpdateTime - packageInfo.firstInstallTime > 60_000L
+
+        if (lastSeen == versionCode) return
+        prefs.edit().putLong("last_seen_version_code", versionCode).apply()
+
+        // Na primeira instalação não há "atualização" para avisar.
+        if (lastSeen == -1L && !isNotFirstInstall) return
+
+        Toast.makeText(
+            this,
+            "BlockerSpam atualizado para v${packageInfo.versionName}",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun checkForUpdates() {
