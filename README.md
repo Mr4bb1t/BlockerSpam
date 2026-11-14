@@ -45,8 +45,8 @@
 
 You can download the compiled APK directly from the repository and install it on your device:
 
-<a href="https://github.com/Mr4bb1t/BlockerSpam/releases/latest/download/BlockerSpam1.6.apk">
-  <img src="https://img.shields.io/badge/Download-BlockerSpam1.6.apk-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
+<a href="https://github.com/Mr4bb1t/BlockerSpam/releases/latest">
+  <img src="https://img.shields.io/badge/Download-Latest%20APK-brightgreen?style=for-the-badge&logo=android" alt="Download APK" />
 </a>
 
 > **Note**: You might need to allow "Install from Unknown Sources" in your Android settings to install the APK.
